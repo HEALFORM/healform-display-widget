@@ -13,7 +13,6 @@ const cors = require('cors');
 const path = require('path');
 const port = process.env.PORT || 8080;
 const morgan = require('morgan');
-const favicon = require('express-favicon');
 const { version } = require('./package.json');
 require('dotenv').config();
 
