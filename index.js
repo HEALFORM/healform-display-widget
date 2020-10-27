@@ -7,6 +7,7 @@ require('custom-env').env(true);
    Import Node Modules
 =================== */
 const express = require('express');
+const axios = require('axios');
 const app = express();
 const router = express.Router();
 const cors = require('cors');
@@ -97,10 +98,23 @@ const io = require('socket.io').listen(app.listen(port, () => {
   console.log('Listening on port ' + port + ' in ' + process.env.NODE_ENV + ' mode');
 }));
 
-io.on('connection', function(socket) {
-  socket.on('appointment', function(message) {
-    console.log('message : ' + message);
-  });
+io.on('connection', socket => {
+  getAppointment(socket);
+  setInterval(() => getAppointment(socket), 10000);
 });
+
+/* ===================
+   Get current appointment
+=================== */
+const getAppointment = async socket => {
+  try {
+    const res = await axios.get(
+      'http://localhost:8080/appointments'
+    );
+    socket.emit('currentAppointment', res.data.result);
+  } catch (error) {
+    socket.emit('currentAppointment', error);
+  }
+};
 
 module.exports = app;
