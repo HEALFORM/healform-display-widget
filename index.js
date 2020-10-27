@@ -81,15 +81,26 @@ app.use('/appointments', appointments);
 /* ===================
    Render base pages
 =================== */
-app.get('*', (req, res) => {
-  res.sendStatus(200);
-});
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'pug')
+
+app.use(express.static('public'))
+
+app.get('/', (req, res) => {
+  res.render('index')
+})
 
 /* ===================
    Start Server on Port 8080
 =================== */
-app.listen(port, () => {
+const io = require('socket.io').listen(app.listen(port, () => {
   console.log('Listening on port ' + port + ' in ' + process.env.NODE_ENV + ' mode');
+}));
+
+io.on('connection', function(socket) {
+  socket.on('appointment', function(message) {
+    console.log('message : ' + message);
+  });
 });
 
 module.exports = app;
