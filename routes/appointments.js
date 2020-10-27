@@ -58,8 +58,16 @@ router.get('/', (req, res) => {
         const end = new Date(timeEnd);
         return start <= now && end > now;
       });
-      
-      res.json(result);
+
+      if (result === undefined) {
+        res.json({
+          'result': 'come in, stay cool'
+        });
+      } else {
+        res.json({
+          'result': result.firstName + ' ' + result.lastName
+        });
+      }
     })
     .catch((error) => {
       throw error;
