@@ -1,0 +1,45 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  background: #3e7dca;
+  font-size: 150%;
+}
+
+.vertical-centered {
+  padding: 1em 2em;
+  background: #fff;
+  max-width: 70%;
+  text-align: center;
+  display: block !important;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 8px !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+}
+
+html.no-flexbox,
+.no-flexbox body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.no-flexbox .vertical-centered {
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -150px;
+  margin-left: -25%;
+}
+
+.css-mine {
+  position: fixed;
+  bottom: 0;
+}

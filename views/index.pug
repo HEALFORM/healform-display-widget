@@ -1,0 +1,18 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        meta(name='viewport' content='width=device-width, initial-scale=1.0')
+        title HEALFORM Live Appointments
+        link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Raleway:300,400,700')
+        link(rel='stylesheet', href='css/style.css')
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js')
+    body
+        #appointment-app
+            .vertical-centered
+                h1
+                    | Hi, Domenik T&ouml;fflinger!
+                    sup(style='font-size: 30px;') &#x2744;&#xFE0F;
+            script.
+              const socket = io();
+              socket.emit('appointment', 'Hello from client');
