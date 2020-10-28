@@ -1,4 +1,4 @@
-# HEALFORM Display Widget
+# myHealform Display-Widget
 
 <p>
 <img src="https://img.shields.io/github/package-json/v/dmnktoe/myhealform-display-widget.svg">
