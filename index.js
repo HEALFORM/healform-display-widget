@@ -58,16 +58,8 @@ let options = {
     },
     host: process.env.HOST,
     basePath: '',
-    produces: ['application/json', 'application/xml'],
-    schemes: ['https'],
-    securityDefinitions: {
-      JWT: {
-        type: 'apiKey',
-        in: 'header',
-        name: 'Authorization',
-        description: '',
-      },
-    },
+    produces: ['application/json'],
+    schemes: ['http', 'https'],
   },
   basedir: __dirname, //app absolute path
   files: ['./routes/**/*.js'], //Path to the API handle folder
