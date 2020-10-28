@@ -6,7 +6,7 @@ let async = require('async');
 chai.use(chaiHttp);
 
 describe('Appointments', () => {
-  describe('/GET appointments', () => {
+  describe('GET /appointments', () => {
     it('should GET all the recordings', (done) => {
       chai
         .request(app)
