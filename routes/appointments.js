@@ -16,11 +16,10 @@ const calendarID = '1840022';
    GET /appointments
 =============================================================== */
 /**
- * This function comment is parsed by doctrine
+ * This request shows information about the current appointment.
  * @route GET /appointments
- * @group Appointments API - Manage audio recordings.
- * @returns {object} 200 - An array of user info
- * @returns {Error}  default - Unexpected error
+ * @group Appointments API - Get current appointment.
+ * @returns {object} 200 - { "result": "come in, stay cool" }
  */
 router.get('/', (req, res) => {
   const url =
