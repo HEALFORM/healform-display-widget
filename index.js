@@ -101,7 +101,7 @@ io.on('connection', socket => {
 const getAppointment = async socket => {
   try {
     const res = await axios.get(
-      'http://localhost:8080/appointments'
+      'http://' + process.env.HOST + ':' + process.env.PORT + '/appointments'
     );
     socket.emit('currentAppointment', res.data.result);
   } catch (error) {
