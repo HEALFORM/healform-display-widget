@@ -26,12 +26,10 @@ const appointments = require('./routes/appointments'); // Import Appointments Ro
    Error Tracking
 =================== */
 const Sentry = require('@sentry/node');
-const Tracing = require('@sentry/tracing');
 Sentry.init({
   dsn: 'https://a3843e1cf6cd4bfcb5bd7bab69acf0d1@o183412.ingest.sentry.io/5476420',
   environment: process.env.NODE_ENV,
-  release: version,
-  tracesSampleRate: 1.0,
+  release: version
 });
 
 /* ===================
