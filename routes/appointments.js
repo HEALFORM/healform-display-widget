@@ -62,11 +62,11 @@ router.get('/', (req, res) => {
       if (result === undefined) {
         res.json({
           'result': 'come in, stay cool'
-        });
+        }).status(200);
       } else {
         res.json({
           'result': result.firstName + ' ' + result.lastName
-        });
+        }).status(200);
       }
     })
     .catch((error) => {
