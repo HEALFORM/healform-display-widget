@@ -41,7 +41,7 @@ router.get('/', (req, res) => {
         const endTimeMinute = appointment.endTime.toString().slice(3, 5);
         let endTime = new Date(appointment.datetime).setHours(endTimeHour, endTimeMinute);
         let endTimeString = new Date(endTime).toString();
-        let endTimeMoment = moment(endTimeString).format();
+        let endTimeMoment = moment(new Date(endTimeString)).format();
 
         rObj['firstName'] = appointment.firstName;
         rObj['lastName'] = appointment.lastName;
