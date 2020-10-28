@@ -13,7 +13,6 @@ const router = express.Router();
 const cors = require('cors');
 const path = require('path');
 const port = process.env.PORT || 8080;
-const morgan = require('morgan');
 const { version } = require('./package.json');
 require('dotenv').config();
 
@@ -38,9 +37,6 @@ Sentry.init({
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('tiny'));
-}
 
 /* ===================
    Swagger API Docs
