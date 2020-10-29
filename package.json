@@ -75,7 +75,7 @@
     "express-swagger-generator": "^1.1.17",
     "mocha": "^8.2.0",
     "nodemon": "^2.0.4",
-    "supertest": "^5.0.0",
+    "supertest": "^6.0.0",
     "typescript": "^4.0.5",
     "utf-8-validate": "^5.0.2"
   }
