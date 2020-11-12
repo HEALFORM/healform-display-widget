@@ -25,4 +25,4 @@ Set the following environment variables
 <!-- prettier-ignore -->
 | Branch    | Tests | Code Coverage | Comments                  |
 | --------- | ----- | ------------- | ------------------------- |
-| `master`  | <img src="https://travis-ci.com/dmnktoe/myhealform-display-widget.svg"> | [![codecov](https://codecov.io/gh/dmnktoe/myhealform-display-widget/branch/main/graph/badge.svg?token=LQGEqYJJUu)](https://codecov.io/gh/dmnktoe/myhealform-display-widget) | Latest Production Release |
+| `master`  | <img src="https://api.travis-ci.com/dmnktoe/myhealform-display-widget.svg?branch=main"> | [![codecov](https://codecov.io/gh/dmnktoe/myhealform-display-widget/branch/main/graph/badge.svg?token=LQGEqYJJUu)](https://codecov.io/gh/dmnktoe/myhealform-display-widget) | Latest Production Release |
