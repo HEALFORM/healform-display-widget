@@ -12,8 +12,6 @@ const apiKey = process.env.ACUITY_API_KEY;
 const max = 100;
 const calendarID = '1840022';
 
-const subtractMinutes = 5;
-
 /* ===============================================================
    GET /appointments
 =============================================================== */
@@ -47,13 +45,13 @@ router.get('/', (req, res) => {
           return new Date(dt.getTime() - minutes * 60000);
         };
 
-        const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), subtractMinutes).toLocaleString(
+        const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), 5).toLocaleString(
           'de-DE',
           {
             timeZone: 'Europe/Berlin',
           }
         );
-        const shiftedTimeEnd = subtractMinutes(new Date(endTimeMoment), subtractMinutes).toLocaleString('de-DE', {
+        const shiftedTimeEnd = subtractMinutes(new Date(endTimeMoment), 5).toLocaleString('de-DE', {
           timeZone: 'Europe/Berlin',
         });
 
@@ -64,7 +62,7 @@ router.get('/', (req, res) => {
 
         return rObj;
       });
-
+      
       const now = moment();
 
       const result = dates.find(({ timeStart, timeEnd }) => {
