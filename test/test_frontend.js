@@ -8,7 +8,8 @@ chai.use(chaiHttp);
 describe('Front-end pages', () => {
   describe('index.html', () => {
     it('landing page exists', (done) => {
-      chai.request(app)
+      chai
+        .request(app)
         .get('/')
         .end(function (err, res) {
           res.status.should.be.equal(200);

@@ -12,6 +12,8 @@ const apiKey = process.env.ACUITY_API_KEY;
 const max = 100;
 const calendarID = '1840022';
 
+const subtractMinutes = 5;
+
 /* ===============================================================
    GET /appointments
 =============================================================== */
@@ -22,8 +24,7 @@ const calendarID = '1840022';
  * @returns {object} 200 - { "result": "come in, stay cool" }
  */
 router.get('/', (req, res) => {
-  const url =
-    apiUrl + 'appointments?max=' + max + '&calendarID=' + calendarID;
+  const url = apiUrl + 'appointments?max=' + max + '&calendarID=' + calendarID;
   fetch(url, {
     method: 'GET',
     headers: {
@@ -33,7 +34,7 @@ router.get('/', (req, res) => {
   })
     .then((response) => response.json())
     .then((appointments) => {
-      const dates = appointments.map(appointment => {
+      const dates = appointments.map((appointment) => {
         const rObj = {};
 
         const endTimeHour = appointment.endTime.toString().slice(0, 2);
@@ -42,10 +43,24 @@ router.get('/', (req, res) => {
         let endTimeString = new Date(endTime).toString();
         let endTimeMoment = moment(new Date(endTimeString)).format();
 
+        let subtractMinutes = function (dt, minutes) {
+          return new Date(dt.getTime() - minutes * 60000);
+        };
+
+        const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), subtractMinutes).toLocaleString(
+          'de-DE',
+          {
+            timeZone: 'Europe/Berlin',
+          }
+        );
+        const shiftedTimeEnd = subtractMinutes(new Date(endTimeMoment), subtractMinutes).toLocaleString('de-DE', {
+          timeZone: 'Europe/Berlin',
+        });
+
         rObj['firstName'] = appointment.firstName;
         rObj['lastName'] = appointment.lastName;
-        rObj['timeStart'] = appointment.datetime.toString();
-        rObj['timeEnd'] = endTimeMoment;
+        rObj['timeStart'] = moment(new Date(shiftedTimeStart)).format();
+        rObj['timeEnd'] = moment(new Date(shiftedTimeEnd)).format();
 
         return rObj;
       });
@@ -59,13 +74,17 @@ router.get('/', (req, res) => {
       });
 
       if (result === undefined) {
-        res.json({
-          'result': 'come in, stay cool'
-        }).status(200);
+        res
+          .json({
+            result: 'come in, stay cool',
+          })
+          .status(200);
       } else {
-        res.json({
-          'result': result.firstName + ' ' + result.lastName
-        }).status(200);
+        res
+          .json({
+            result: result.firstName + ' ' + result.lastName,
+          })
+          .status(200);
       }
     })
     .catch((error) => {
