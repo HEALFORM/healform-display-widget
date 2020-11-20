@@ -8,9 +8,11 @@
 <img src="https://img.shields.io/github/package-json/v/dmnktoe/myhealform-display-widget.svg">
 </p>
 
+This app displays the name of the patient of the current HEALFORM appointment in Kassel on the website (in the widget) and updates it in real-time.
+
 ## Configuration
 
-Set the following environment variables
+Set the following environment variables.
 
 | Variable | Default | Notes                          |
 | -------- | ------- | ------------------------------ |
