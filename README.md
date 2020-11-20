@@ -1,3 +1,7 @@
+<div align="center"><img src="https://assets.dmnktoe.de/__ext/healform/healform_logo_wide.png" width="400"></div>
+
+<hr>
+
 # myHealform Display-Widget
 
 <p>
