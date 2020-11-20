@@ -9,7 +9,7 @@ const apiUrl = process.env.ACUITY_BASE_URL;
 const userId = process.env.ACUITY_USER_ID;
 const apiKey = process.env.ACUITY_API_KEY;
 
-const max = 100;
+const max = 250;
 const calendarID = '1840022';
 
 /* ===============================================================
@@ -62,7 +62,7 @@ router.get('/', (req, res) => {
 
         return rObj;
       });
-      
+
       const now = moment();
 
       const result = dates.find(({ timeStart, timeEnd }) => {
