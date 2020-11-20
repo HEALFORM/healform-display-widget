@@ -6,7 +6,6 @@
 
 <p>
 <img src="https://img.shields.io/github/package-json/v/dmnktoe/myhealform-display-widget.svg">
-<img src="https://david-dm.org/dmnktoe/myhealform-display-widget/status.svg">
 </p>
 
 ## Configuration
