@@ -1,4 +1,4 @@
-<div align="center"><img src="https://assets.dmnktoe.de/__ext/healform/healform_logo_wide.png" width="400"></div>
+<div align="center"><img src="https://assets.dmnktoe.de/__ext/healform/healform_logo_wide.png" width="300"></div>
 
 <hr>
 
