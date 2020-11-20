@@ -45,12 +45,9 @@ router.get('/', (req, res) => {
           return new Date(dt.getTime() - minutes * 60000);
         };
 
-        const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), 5).toLocaleString(
-          'de-DE',
-          {
-            timeZone: 'Europe/Berlin',
-          }
-        );
+        const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), 5).toLocaleString('de-DE', {
+          timeZone: 'Europe/Berlin',
+        });
         const shiftedTimeEnd = subtractMinutes(new Date(endTimeMoment), 5).toLocaleString('de-DE', {
           timeZone: 'Europe/Berlin',
         });

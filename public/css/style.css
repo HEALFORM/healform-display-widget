@@ -7,8 +7,38 @@ body {
   margin: 0;
   font-family: 'Raleway', sans-serif;
   font-weight: 300;
-  background: #3e7dca;
   font-size: 150%;
+  background: #3e7dca url('../img/polygon_bg.png') repeat 0 0;
+  -webkit-animation: 30s linear 0s normal none infinite animate;
+  -moz-animation: 30s linear 0s normal none infinite animate;
+  -ms-animation: 30s linear 0s normal none infinite animate;
+  -o-animation: 30s linear 0s normal none infinite animate;
+  animation: 30s linear 0s normal none infinite animate;
+}
+
+@-webkit-keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
+}
+
+@-moz-keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
+}
+
+@-ms-keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
+}
+
+@-o-keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
+}
+
+@keyframes animate {
+  from {background-position:0 0;}
+  to {background-position: 500px 0;}
 }
 
 .vertical-centered {
