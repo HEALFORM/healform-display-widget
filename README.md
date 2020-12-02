@@ -5,7 +5,7 @@
 # myHealform Display-Widget
 
 <p>
-<img src="https://img.shields.io/github/package-json/v/dmnktoe/myhealform-display-widget.svg">
+<img src="https://img.shields.io/github/package-json/v/HEALFORM/myhealform-display-widget.svg">
 </p>
 
 This app displays the name of the patient of the current HEALFORM appointment in Kassel on the website (in the widget) and updates it in real-time.
@@ -30,4 +30,4 @@ Set the following environment variables.
 <!-- prettier-ignore -->
 | Branch    | Tests | Code Coverage | Comments                  |
 | --------- | ----- | ------------- | ------------------------- |
-| `master`  | <img src="https://api.travis-ci.com/dmnktoe/myhealform-display-widget.svg?branch=main"> | [![codecov](https://codecov.io/gh/dmnktoe/myhealform-display-widget/branch/main/graph/badge.svg?token=LQGEqYJJUu)](https://codecov.io/gh/dmnktoe/myhealform-display-widget) | Latest Production Release |
+| `master`  | <img src="https://api.travis-ci.com/HEALFORM/myhealform-display-widget.svg?branch=main"> | [![codecov](https://codecov.io/gh/HEALFORM/myhealform-display-widget/branch/main/graph/badge.svg?token=LQGEqYJJUu)](https://codecov.io/gh/HEALFORM/myhealform-display-widget) | Latest Production Release |
