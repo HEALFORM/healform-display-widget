@@ -42,7 +42,7 @@ body {
 }
 
 .vertical-centered {
-  padding: 1em 2em;
+  padding: 3rem;
   background: #fff;
   max-width: 70%;
   text-align: center;
@@ -50,6 +50,17 @@ body {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 8px !important;
   border-radius: 8px !important;
   text-decoration: none !important;
+}
+
+h1 {
+  margin: 0;
+}
+
+.subline {
+  margin: 1rem 0 0;
+  display: block;
+  position: relative;
+  display: none;
 }
 
 sup {
