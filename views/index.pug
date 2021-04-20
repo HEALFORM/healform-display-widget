@@ -1,22 +1,26 @@
 doctype html
-html
-    head
-        meta(charset='utf-8')
-        meta(name='viewport' content='width=device-width, initial-scale=1.0')
-        title HEALFORM Live Appointments
-        link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Raleway')
-        link(rel='stylesheet', href='css/style.css')
-        script(src='js/socket.io.js')
-        script(src='js/jquery.min.js')
-    body
-        .vertical-centered
-            h1
-                | Hi,&nbsp;
-                span.name
-                | !
-                sup &#x2744;&#xFE0F;
-        script.
-          const socket = io();
-          socket.on('currentAppointment', function (message) {
-            $('.name').text(message);
-          });
+head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title HEALFORM Live Appointments
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Raleway')
+    link(rel='stylesheet', href='css/style.css')
+    script(src='js/socket.io.js')
+    script(src='js/jquery.min.js')
+.vertical-centered
+    h1
+        | Hi,&nbsp;
+        span.name
+        | !
+        sup &#x2744;&#xFE0F;
+    span.subline Willkommen zu deinem HEALFORM-Termin.
+script.
+    const socket = io();
+    socket.on('currentAppointment', function(message) {
+        $('.name').text(message.result);
+        if (message.isAppointment) {
+            $('.subline').show();
+        } else {
+            $('.subline').hide();
+        }
+    });

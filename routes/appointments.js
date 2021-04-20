@@ -72,12 +72,14 @@ router.get('/', (req, res) => {
         res
           .json({
             result: 'come in, stay cool',
+            isAppointment: false,
           })
           .status(200);
       } else {
         res
           .json({
             result: result.firstName + ' ' + result.lastName,
+            isAppointment: true,
           })
           .status(200);
       }
