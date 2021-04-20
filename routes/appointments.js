@@ -83,6 +83,12 @@ router.get('/', (req, res) => {
       }
     })
     .catch((error) => {
+      res
+        .json({
+          result: 'Error loading data',
+          isAppointment: false,
+        })
+        .status(200);
       throw error;
     });
 });
