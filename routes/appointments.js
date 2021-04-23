@@ -71,14 +71,14 @@ router.get('/', (req, res) => {
       if (result === undefined) {
         res
           .json({
-            result: 'come in, stay cool',
+            result: 'Hi, come in, stay cool!',
             isAppointment: false,
           })
           .status(200);
       } else {
         res
           .json({
-            result: result.firstName + ' ' + result.lastName,
+            result: 'Hi, ' + result.firstName + ' ' + result.lastName + '!',
             isAppointment: true,
           })
           .status(200);
@@ -87,8 +87,8 @@ router.get('/', (req, res) => {
     .catch((error) => {
       res
         .json({
-          result: 'Error loading data',
-          isAppointment: false,
+          result: 'Error loading data.',
+          isAppointment: false
         })
         .status(200);
       throw error;

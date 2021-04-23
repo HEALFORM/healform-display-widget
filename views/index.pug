@@ -9,10 +9,7 @@ head
     script(src='js/jquery.min.js')
 .vertical-centered
     h1
-        | Hi,&nbsp;
-        span.name
-        | !
-        sup &#x2744;&#xFE0F;
+        span.infoMessage
     span.subline Willkommen zu deinem HEALFORM-Termin.
 script.
     const socket = io();
@@ -24,7 +21,7 @@ script.
     });
 
     socket.on('currentAppointment', function(message) {
-        $('.name').text(message.result);
+        $('.infoMessage').text(message.result);
         if (message.isAppointment) {
             $('.subline').show();
         } else {
