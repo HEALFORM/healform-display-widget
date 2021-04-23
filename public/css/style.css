@@ -48,7 +48,7 @@ body {
   text-align: center;
   display: block !important;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 8px !important;
-  border-radius: 8px !important;
+  border-radius: 15px !important;
   text-decoration: none !important;
 }
 
@@ -61,8 +61,4 @@ h1 {
   display: block;
   position: relative;
   display: none;
-}
-
-sup {
-  font-size: 30px;
 }
