@@ -16,6 +16,13 @@ head
     span.subline Willkommen zu deinem HEALFORM-Termin.
 script.
     const socket = io();
+
+    $(document).ready(function () {
+        if ($('.infoMessage').is(':empty')) {
+            $('.infoMessage').prepend('<img src="img/loading.gif" style="width: 24px;" />')
+        }
+    });
+
     socket.on('currentAppointment', function(message) {
         $('.name').text(message.result);
         if (message.isAppointment) {
