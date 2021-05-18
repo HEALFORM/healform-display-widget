@@ -26,7 +26,7 @@ const appointments = require('./routes/appointments'); // Import Appointments Ro
 =================== */
 const Sentry = require('@sentry/node');
 Sentry.init({
-  dsn: 'https://a3843e1cf6cd4bfcb5bd7bab69acf0d1@o183412.ingest.sentry.io/5476420',
+  dsn: "https://13ebfe98c5e4426f82da1eac5f514cf3@o685353.ingest.sentry.io/5772325",
   environment: process.env.NODE_ENV,
   release: version,
 });
@@ -99,6 +99,7 @@ const getAppointment = async (socket) => {
     const res = await axios.get('http://' + process.env.HOST + ':' + process.env.PORT + '/appointments');
     socket.emit('currentAppointment', res.data);
   } catch (error) {
+    Sentry.captureException(error);
     socket.emit('currentAppointment', error);
   }
 };

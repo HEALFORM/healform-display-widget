@@ -5,6 +5,8 @@ const fetch = require('node-fetch');
 const base64 = require('base-64');
 const moment = require('moment');
 
+const Sentry = require('@sentry/node');
+
 const apiUrl = process.env.ACUITY_BASE_URL;
 const userId = process.env.ACUITY_USER_ID;
 const apiKey = process.env.ACUITY_API_KEY;
@@ -85,6 +87,7 @@ router.get('/', (req, res) => {
       }
     })
     .catch((error) => {
+      Sentry.captureException(error);
       res
         .json({
           result: 'Error loading data.',
