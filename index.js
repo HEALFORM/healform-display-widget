@@ -80,15 +80,16 @@ app.get('/', (req, res) => {
 /* ===================
    Start Server on Port 8080
 =================== */
-const io = require('socket.io').listen(
-  app.listen(port, () => {
-    console.log('Listening on port ' + port + ' in ' + process.env.NODE_ENV + ' mode');
-  })
-);
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
   getAppointment(socket);
   setInterval(() => getAppointment(socket), 30000);
+});
+
+server.listen(port, () => {
+  console.log('Listening on port ' + port + ' in ' + process.env.NODE_ENV + ' mode');
 });
 
 /* ===================
