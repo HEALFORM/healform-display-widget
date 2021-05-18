@@ -88,7 +88,7 @@ const io = require('socket.io').listen(
 
 io.on('connection', (socket) => {
   getAppointment(socket);
-  setInterval(() => getAppointment(socket), 10000);
+  setInterval(() => getAppointment(socket), 30000);
 });
 
 /* ===================
