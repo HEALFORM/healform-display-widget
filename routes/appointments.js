@@ -94,7 +94,6 @@ router.get('/', (req, res) => {
           isAppointment: false
         })
         .status(200);
-      throw error;
     });
 });
 
