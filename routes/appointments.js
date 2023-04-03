@@ -31,6 +31,7 @@ router.get('/', (req, res) => {
       Authorization: 'Basic ' + base64.encode(userId + ':' + apiKey),
       'Content-Type': 'application/json',
     },
+    compress: false,
   })
     .then((response) => response.json())
     .then((appointments) => {
