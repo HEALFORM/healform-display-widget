@@ -1,6 +1,6 @@
 {
   "name": "myhealform-display-widget",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "This server provides real-time information about current HEALFORM appointments scheduled through the Acuity Scheduling API.",
   "main": "index.js",
   "scripts": {
