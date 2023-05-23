@@ -34,6 +34,7 @@ router.get('/', (req, res) => {
     compress: false,
   })
     .then(response => {
+      Sentry.captureMessage(response);
       if (!response.ok) {
         Sentry.captureMessage(response);
         throw new Error('Network response was not okay');
