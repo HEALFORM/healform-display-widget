@@ -11,7 +11,7 @@ const apiUrl = process.env.ACUITY_BASE_URL;
 const userId = process.env.ACUITY_USER_ID;
 const apiKey = process.env.ACUITY_API_KEY;
 
-const max = 250;
+const max = 100;
 const calendarID = '1840022';
 
 /* ===============================================================
@@ -24,7 +24,8 @@ const calendarID = '1840022';
  * @returns {object} 200 - { "result": "come in, stay cool" }
  */
 router.get('/', (req, res) => {
-  const url = apiUrl + 'appointments?max=' + max + '&calendarID=' + calendarID;
+  const url = apiUrl + 'appointments?max=' + max + '&calendarID=' + calendarID + '&minDate=' + moment().format('YYYY-MM-DD') + '&direction=asc';
+
   fetch(url, {
     method: 'GET',
     headers: {
@@ -54,12 +55,8 @@ router.get('/', (req, res) => {
           return new Date(dt.getTime() - minutes * 60000);
         };
 
-        const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), 5).toLocaleString('de-DE', {
-          timeZone: 'Europe/Berlin',
-        });
-        const shiftedTimeEnd = subtractMinutes(new Date(endTimeMoment), 5).toLocaleString('de-DE', {
-          timeZone: 'Europe/Berlin',
-        });
+        const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), 5);
+        const shiftedTimeEnd = subtractMinutes(new Date(endTimeMoment), 5);
 
         rObj['firstName'] = appointment.firstName;
         rObj['lastName'] = appointment.lastName;
