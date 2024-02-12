@@ -1,5 +1,5 @@
 {
-  "name": "myhealform-display-widget",
+  "name": "healform-display-widget",
   "version": "1.0.5",
   "description": "This server provides real-time information about current HEALFORM appointments scheduled through the Acuity Scheduling API.",
   "main": "index.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HEALFORM/myhealform-display-widget.git"
+    "url": "git+https://github.com/HEALFORM/healform-display-widget.git"
   },
   "keywords": [
     "myhealform",
@@ -28,9 +28,9 @@
   "author": "Domenik Toefflinger",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/HEALFORM/myhealform-display-widget/issues"
+    "url": "https://github.com/HEALFORM/healform-display-widget/issues"
   },
-  "homepage": "https://github.com/HEALFORM/myhealform-display-widget#readme",
+  "homepage": "https://github.com/HEALFORM/healform-display-widget#readme",
   "dependencies": {
     "@babel/core": "^7.21.8",
     "@babel/plugin-transform-runtime": "^7.21.4",
