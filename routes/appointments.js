@@ -1,18 +1,18 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const axios = require("axios");
-const base64 = require("base-64");
-const moment = require("moment");
+const axios = require('axios');
+const base64 = require('base-64');
+const moment = require('moment');
 
-const Sentry = require("@sentry/node");
+const Sentry = require('@sentry/node');
 
 const apiUrl = process.env.ACUITY_BASE_URL;
 const userId = process.env.ACUITY_USER_ID;
 const apiKey = process.env.ACUITY_API_KEY;
 
 const max = 100;
-const calendarID = "1840022";
+const calendarID = '1840022';
 
 /* ===============================================================
    GET /appointments
@@ -29,8 +29,8 @@ const createAxiosInstance = () => {
     baseURL: apiUrl,
     timeout: 10000, // 10 seconds timeout
     headers: {
-      Authorization: "Basic " + base64.encode(userId + ":" + apiKey),
-      "Content-Type": "application/json",
+      Authorization: 'Basic ' + base64.encode(userId + ':' + apiKey),
+      'Content-Type': 'application/json',
     },
   });
 };
@@ -44,10 +44,7 @@ const subtractMinutes = (date, minutes) => {
 const formatAppointment = (appointment) => {
   const endTimeHour = appointment.endTime.slice(0, 2);
   const endTimeMinute = appointment.endTime.slice(3, 5);
-  const endTime = new Date(appointment.datetime).setHours(
-    endTimeHour,
-    endTimeMinute
-  );
+  const endTime = new Date(appointment.datetime).setHours(endTimeHour, endTimeMinute);
 
   const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), 5);
   const shiftedTimeEnd = subtractMinutes(new Date(endTime), 5);
@@ -61,10 +58,8 @@ const formatAppointment = (appointment) => {
 };
 
 // Route handler
-router.get("/", async (req, res) => {
-  const url = `appointments?max=${max}&calendarID=${calendarID}&minDate=${moment().format(
-    "YYYY-MM-DD"
-  )}&direction=asc`;
+router.get('/', async (req, res) => {
+  const url = `appointments?max=${max}&calendarID=${calendarID}&minDate=${moment().format('YYYY-MM-DD')}&direction=asc`;
 
   try {
     const axiosInstance = createAxiosInstance();
@@ -88,7 +83,7 @@ router.get("/", async (req, res) => {
       });
     } else {
       res.status(200).json({
-        result: "Hi, come in, stay cool!",
+        result: 'Hi, come in, stay cool!',
         isAppointment: false,
       });
     }
@@ -96,9 +91,9 @@ router.get("/", async (req, res) => {
     // Capture the error in Sentry and send a response with an error message
     Sentry.captureException(error);
 
-    let errorMessage = "Error loading data.";
-    if (error.code === "ECONNABORTED") {
-      errorMessage = "Request timed out. Please try again.";
+    let errorMessage = 'Error loading data.';
+    if (error.code === 'ECONNABORTED') {
+      errorMessage = 'Request timed out. Please try again.';
     } else if (error.response) {
       errorMessage = `Error: ${error.response.status} - ${error.response.statusText}`;
     }
