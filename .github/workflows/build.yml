@@ -8,12 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12]
+        node-version: [20]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Setup staging environment
@@ -25,6 +25,7 @@ jobs:
           echo ACUITY_BASE_URL=${{ secrets.ACUITY_BASE_URL }} >> .env.staging
           echo ACUITY_USER_ID=${{ secrets.ACUITY_USER_ID }} >> .env.staging
           echo ACUITY_API_KEY=${{ secrets.ACUITY_API_KEY }} >> .env.staging
+          echo SENTRY_DSN=${{ secrets.SENTRY_DSN }} >> .env.staging
           cat .env.staging
       - name: Install
         run: npm install

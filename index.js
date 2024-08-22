@@ -1,52 +1,47 @@
-/* ===================
-   Import Environment
-=================== */
 require('custom-env').env(true);
-
-/* ===================
-   Import Node Modules
-=================== */
 const express = require('express');
 const axios = require('axios');
-const app = express();
-const router = express.Router();
 const cors = require('cors');
 const path = require('path');
-const port = process.env.PORT || 8080;
-const { version } = require('./package.json');
+const helmet = require('helmet');
+const Sentry = require('@sentry/node');
+const http = require('http');
+const socketIo = require('socket.io');
 require('dotenv').config();
 
-/* ===================
-   Import routes
-=================== */
-const appointments = require('./routes/appointments'); // Import Appointments Routes
+// Validate required environment variables
+const requiredEnv = ['HOST', 'PORT', 'NODE_ENV', 'SENTRY_DSN'];
+requiredEnv.forEach((key) => {
+  if (!process.env[key]) {
+    throw new Error(`Environment variable ${key} is missing`);
+  }
+});
 
-/* ===================
-   Error Tracking
-=================== */
-const Sentry = require('@sentry/node');
+const app = express();
+const port = process.env.PORT || 8080;
+const { version } = require('./package.json');
+const appointments = require('./routes/appointments');
+
+// Sentry initialization for error tracking
 Sentry.init({
-  dsn: "https://13ebfe98c5e4426f82da1eac5f514cf3@o685353.ingest.sentry.io/5772325",
+  dsn: process.env.SENTRY_DSN,
   environment: process.env.NODE_ENV,
   release: version,
 });
 
-/* ===================
-   Middlewares
-=================== */
-app.use(cors());
+// Middlewares
+app.use(helmet()); // Adds security headers
+app.use(cors({ origin: 'https://display-widget.healform.de/' })); // Replace with your actual domain
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
-/* ===================
-   Swagger API Docs
-=================== */
+// Set up Swagger API Docs
 const expressSwagger = require('express-swagger-generator')(app);
 let options = {
   swaggerDefinition: {
     info: {
-      description:
-        'This server provides real-time information about current HEALFORM appointments scheduled through the Acuity Scheduling API.',
+      description: 'Real-time HEALFORM appointments via Acuity Scheduling API.',
       title: 'HEALFORM Display Widget',
       version: version,
     },
@@ -55,54 +50,53 @@ let options = {
     produces: ['application/json'],
     schemes: ['http', 'https'],
   },
-  basedir: __dirname, //app absolute path
-  files: ['./routes/**/*.js'], //Path to the API handle folder
+  basedir: __dirname,
+  files: ['./routes/**/*.js'],
 };
 expressSwagger(options);
 
-/* ===================
-   Routes
-=================== */
-app.use('/appointments', appointments);
-
-/* ===================
-   Render base pages
-=================== */
+// Pug views setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(express.static('public'));
+// Routes
+app.use('/appointments', appointments);
 
+// Render base page
 app.get('/', (req, res) => {
   res.render('index');
 });
 
-/* ===================
-   Start Server on Port 8080
-=================== */
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+// Start Server
+const server = http.createServer(app);
+const io = socketIo(server);
 
-io.on('connection', (socket) => {
-  getAppointment(socket);
-  setInterval(() => getAppointment(socket), 30000);
-});
-
-server.listen(port, () => {
-  console.log('Listening on port ' + port + ' in ' + process.env.NODE_ENV + ' mode');
-});
-
-/* ===================
-   Get current appointment
-=================== */
 const getAppointment = async (socket) => {
   try {
-    const res = await axios.get('http://' + process.env.HOST + ':' + process.env.PORT + '/appointments');
+    const res = await axios.get(`http://${process.env.HOST}:${process.env.PORT}/appointments`);
     socket.emit('currentAppointment', res.data);
   } catch (error) {
     Sentry.captureException(error);
-    socket.emit('currentAppointment', error);
+    socket.emit('currentAppointment', {
+      result: 'Error fetching appointment data',
+      isAppointment: false,
+    });
   }
 };
+
+// Socket.io connection handling
+io.on('connection', (socket) => {
+  getAppointment(socket);
+  const interval = setInterval(() => getAppointment(socket), 30000);
+
+  socket.on('disconnect', () => {
+    clearInterval(interval);
+  });
+});
+
+// Start listening on the defined port
+server.listen(port, () => {
+  console.log(`Server running on port ${port} in ${process.env.NODE_ENV} mode`);
+});
 
 module.exports = app;

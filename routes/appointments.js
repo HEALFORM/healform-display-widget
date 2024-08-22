@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const fetch = require('node-fetch');
+const axios = require('axios');
 const base64 = require('base-64');
 const moment = require('moment');
 
@@ -23,82 +23,86 @@ const calendarID = '1840022';
  * @group Appointments API - Get current appointment.
  * @returns {object} 200 - { "result": "come in, stay cool" }
  */
-router.get('/', (req, res) => {
-  const url = apiUrl + 'appointments?max=' + max + '&calendarID=' + calendarID + '&minDate=' + moment().format('YYYY-MM-DD') + '&direction=asc';
-
-  fetch(url, {
-    method: 'GET',
+// Function to create axios instance with timeout and headers
+const createAxiosInstance = () => {
+  return axios.create({
+    baseURL: apiUrl,
+    timeout: 10000, // 10 seconds timeout
     headers: {
       Authorization: 'Basic ' + base64.encode(userId + ':' + apiKey),
       'Content-Type': 'application/json',
     },
-    compress: false,
-  })
-    .then(response => {
-      if (!response.ok) {
-        Sentry.captureMessage(response);
-        throw new Error('Network response was not okay');
-      }
-      return response.json();
-    })
-    .then((appointments) => {
-      const dates = appointments.map((appointment) => {
-        const rObj = {};
+  });
+};
 
-        const endTimeHour = appointment.endTime.toString().slice(0, 2);
-        const endTimeMinute = appointment.endTime.toString().slice(3, 5);
-        let endTime = new Date(appointment.datetime).setHours(endTimeHour, endTimeMinute);
-        let endTimeString = new Date(endTime).toString();
-        let endTimeMoment = moment(new Date(endTimeString)).format();
+// Function to subtract minutes from a date
+const subtractMinutes = (date, minutes) => {
+  return new Date(date.getTime() - minutes * 60000);
+};
 
-        let subtractMinutes = function (dt, minutes) {
-          return new Date(dt.getTime() - minutes * 60000);
-        };
+// Function to format appointment data
+const formatAppointment = (appointment) => {
+  const endTimeHour = appointment.endTime.slice(0, 2);
+  const endTimeMinute = appointment.endTime.slice(3, 5);
+  const endTime = new Date(appointment.datetime).setHours(endTimeHour, endTimeMinute);
 
-        const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), 5);
-        const shiftedTimeEnd = subtractMinutes(new Date(endTimeMoment), 5);
+  const shiftedTimeStart = subtractMinutes(new Date(appointment.datetime), 5);
+  const shiftedTimeEnd = subtractMinutes(new Date(endTime), 5);
 
-        rObj['firstName'] = appointment.firstName;
-        rObj['lastName'] = appointment.lastName;
-        rObj['timeStart'] = moment(new Date(shiftedTimeStart)).format();
-        rObj['timeEnd'] = moment(new Date(shiftedTimeEnd)).format();
+  return {
+    firstName: appointment.firstName,
+    lastName: appointment.lastName,
+    timeStart: moment(shiftedTimeStart).format(),
+    timeEnd: moment(shiftedTimeEnd).format(),
+  };
+};
 
-        return rObj;
-      });
+// Route handler
+router.get('/', async (req, res) => {
+  const url = `appointments?max=${max}&calendarID=${calendarID}&minDate=${moment().format('YYYY-MM-DD')}&direction=asc`;
 
-      const now = moment();
+  try {
+    const axiosInstance = createAxiosInstance();
+    const response = await axiosInstance.get(url);
 
-      const result = dates.find(({ timeStart, timeEnd }) => {
-        const start = new Date(timeStart);
-        const end = new Date(timeEnd);
-        return start <= now && end > now;
-      });
+    const appointments = response.data;
+    const formattedDates = appointments.map(formatAppointment);
 
-      if (result === undefined) {
-        res
-          .json({
-            result: 'Hi, come in, stay cool!',
-            isAppointment: false,
-          })
-          .status(200);
-      } else {
-        res
-          .json({
-            result: 'Hi, ' + result.firstName + ' ' + result.lastName + '!',
-            isAppointment: true,
-          })
-          .status(200);
-      }
-    })
-    .catch((error) => {
-      Sentry.captureException(error);
-      res
-        .json({
-          result: 'Error loading data.',
-          isAppointment: false
-        })
-        .status(200);
+    const now = moment();
+
+    const currentAppointment = formattedDates.find(({ timeStart, timeEnd }) => {
+      const start = new Date(timeStart);
+      const end = new Date(timeEnd);
+      return start <= now && end > now;
     });
+
+    if (currentAppointment) {
+      res.status(200).json({
+        result: `Hi, ${currentAppointment.firstName} ${currentAppointment.lastName}!`,
+        isAppointment: true,
+      });
+    } else {
+      res.status(200).json({
+        result: 'Hi, come in, stay cool!',
+        isAppointment: false,
+      });
+    }
+  } catch (error) {
+    // Capture the error in Sentry and send a response with an error message
+    Sentry.captureException(error);
+
+    let errorMessage = 'Error loading data.';
+    if (error.code === 'ECONNABORTED') {
+      errorMessage = 'Request timed out. Please try again.';
+    } else if (error.response) {
+      errorMessage = `Error: ${error.response.status} - ${error.response.statusText}`;
+    }
+
+    res.status(500).json({
+      result: errorMessage,
+      isAppointment: false,
+    });
+  }
 });
 
 module.exports = router;
