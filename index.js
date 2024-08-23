@@ -1,6 +1,7 @@
 require('custom-env').env(true);
 const express = require('express');
 const axios = require('axios');
+const axiosRetry = require('axios-retry').default;
 const cors = require('cors');
 const path = require('path');
 const helmet = require('helmet');
@@ -78,6 +79,14 @@ const io = socketIo(server, {
 const axiosInstance = axios.create({
   baseURL: `http://${process.env.HOST}:${process.env.PORT}`,
   timeout: 20000, // 20 seconds timeout
+});
+
+axiosRetry(axiosInstance, {
+  retries: 3,
+  retryDelay: (retryCount) => retryCount * 2000,
+  retryCondition: (error) => {
+    return error.code === 'ECONNABORTED' || error.code === 'ECONNRESET' || error.response?.status >= 500;
+  },
 });
 
 const getAppointment = async (socket) => {
