@@ -64,7 +64,7 @@
     "bufferutil": "^4.0.8",
     "chai": "^4.3.7",
     "chai-http": "^4.3.0",
-    "eslint": "^6.8.0",
+    "eslint": "^9.0.0",
     "express-swagger-generator": "^1.1.17",
     "mocha": "^10.7.3",
     "nodemon": "^3.1.4",
