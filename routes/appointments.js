@@ -1,29 +1,17 @@
 const express = require('express');
 const router = express.Router();
-
 const axios = require('axios');
 const base64 = require('base-64');
 const moment = require('moment');
-
 const Sentry = require('@sentry/node');
 
 const apiUrl = process.env.ACUITY_BASE_URL;
 const userId = process.env.ACUITY_USER_ID;
 const apiKey = process.env.ACUITY_API_KEY;
-
 const max = 100;
 const calendarID = '1840022';
 
-/* ===============================================================
-   GET /appointments
-=============================================================== */
-/**
- * This request shows information about the current appointment.
- * @route GET /appointments
- * @group Appointments API - Get current appointment.
- * @returns {object} 200 - { "result": "come in, stay cool" }
- */
-// Function to create axios instance with timeout and headers
+// Create axios instance with timeout and headers
 const createAxiosInstance = () => {
   return axios.create({
     baseURL: apiUrl,
@@ -57,7 +45,16 @@ const formatAppointment = (appointment) => {
   };
 };
 
-// Route handler
+/* ===============================================================
+   GET /appointments
+=============================================================== */
+/**
+ * This request shows information about the current appointment.
+ * @route GET /appointments
+ * @group Appointments API - Get current appointment.
+ * @returns {object} 200 - { "result": "come in, stay cool" }
+ */
+
 router.get('/', async (req, res) => {
   const url = `appointments?max=${max}&calendarID=${calendarID}&minDate=${moment().format('YYYY-MM-DD')}&direction=asc`;
 
@@ -69,7 +66,6 @@ router.get('/', async (req, res) => {
     const formattedDates = appointments.map(formatAppointment);
 
     const now = moment();
-
     const currentAppointment = formattedDates.find(({ timeStart, timeEnd }) => {
       const start = new Date(timeStart);
       const end = new Date(timeEnd);
@@ -94,6 +90,8 @@ router.get('/', async (req, res) => {
     let errorMessage = 'Error loading data.';
     if (error.code === 'ECONNABORTED') {
       errorMessage = 'Request timed out. Please try again.';
+    } else if (error.code === 'ECONNRESET') {
+      errorMessage = 'Connection was reset. Please try again.';
     } else if (error.response) {
       errorMessage = `Error: ${error.response.status} - ${error.response.statusText}`;
     }

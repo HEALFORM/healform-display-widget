@@ -27,7 +27,7 @@ describe('Appointments API', () => {
     it('should GET all the appointments successfully', (done) => {
       // Mock the API request to Acuity Scheduling
       nock(apiUrl)
-        .get(`/appointments`)
+        .get('/appointments')
         .query({
           max: max.toString(),
           calendarID: calendarID.toString(),
@@ -55,18 +55,18 @@ describe('Appointments API', () => {
         });
     });
 
-    it('should handle request timeout', (done) => {
+    it('should handle request timeout gracefully', (done) => {
       // Simulate a timeout error
       nock(apiUrl)
-        .get(`/appointments`)
+        .get('/appointments')
         .query({
           max: max.toString(),
           calendarID: calendarID.toString(),
           minDate: minDate,
           direction: 'asc',
         })
-        .delay(11000) // Delay the response for longer than the timeout
-        .reply(200);
+        .delay(21000) // Delay the response for longer than the timeout
+        .reply(200); // Still reply with status 200 but delayed
 
       chai
         .request(app)
@@ -83,7 +83,7 @@ describe('Appointments API', () => {
     it('should handle server errors gracefully', (done) => {
       // Mock a server error response from Acuity Scheduling
       nock(apiUrl)
-        .get(`/appointments`)
+        .get('/appointments')
         .query({
           max: max.toString(),
           calendarID: calendarID.toString(),
@@ -99,6 +99,33 @@ describe('Appointments API', () => {
           res.should.have.status(500);
           res.body.should.be.a('object');
           res.body.should.have.property('result').that.is.a('string').and.contains('Error');
+          res.body.should.have.property('isAppointment').that.equals(false);
+          done();
+        });
+    });
+
+    it('should handle ECONNRESET error gracefully', (done) => {
+      // Mock an ECONNRESET error
+      nock(apiUrl)
+        .get('/appointments')
+        .query({
+          max: max.toString(),
+          calendarID: calendarID.toString(),
+          minDate: minDate,
+          direction: 'asc',
+        })
+        .replyWithError({
+          message: 'ECONNRESET',
+          code: 'ECONNRESET',
+        });
+
+      chai
+        .request(app)
+        .get('/appointments')
+        .end((err, res) => {
+          res.should.have.status(500);
+          res.body.should.be.a('object');
+          res.body.should.have.property('result').that.equals('Connection was reset. Please try again.');
           res.body.should.have.property('isAppointment').that.equals(false);
           done();
         });
