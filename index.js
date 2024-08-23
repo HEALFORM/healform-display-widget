@@ -69,11 +69,20 @@ app.get('/', (req, res) => {
 
 // Start Server
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  pingTimeout: 10000, // 60 seconds timeout
+  pingInterval: 25000, // 25 seconds interval
+});
+
+// Reusable Axios instance with timeout
+const axiosInstance = axios.create({
+  baseURL: `http://${process.env.HOST}:${process.env.PORT}`,
+  timeout: 20000, // 20 seconds timeout
+});
 
 const getAppointment = async (socket) => {
   try {
-    const res = await axios.get(`http://${process.env.HOST}:${process.env.PORT}/appointments`);
+    const res = await axiosInstance.get('/appointments');
     socket.emit('currentAppointment', res.data);
   } catch (error) {
     Sentry.captureException(error);
@@ -86,13 +95,31 @@ const getAppointment = async (socket) => {
 
 // Socket.io connection handling
 io.on('connection', (socket) => {
+  // Immediately fetch appointment data
   getAppointment(socket);
+
+  // Set up interval to fetch data every 30 seconds
   const interval = setInterval(() => getAppointment(socket), 30000);
 
+  // Clean up interval on disconnect
   socket.on('disconnect', () => {
     clearInterval(interval);
   });
 });
+
+// Handle process termination for graceful shutdown
+const shutdown = () => {
+  io.close(() => {
+    console.log('Closed remaining socket connections.');
+    server.close(() => {
+      console.log('Shut down server.');
+      process.exit(0);
+    });
+  });
+};
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
 
 // Start listening on the defined port
 server.listen(port, () => {

@@ -27,7 +27,7 @@ const calendarID = '1840022';
 const createAxiosInstance = () => {
   return axios.create({
     baseURL: apiUrl,
-    timeout: 10000, // 10 seconds timeout
+    timeout: 20000, // 20 seconds timeout
     headers: {
       Authorization: 'Basic ' + base64.encode(userId + ':' + apiKey),
       'Content-Type': 'application/json',
